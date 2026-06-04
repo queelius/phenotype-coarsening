@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: article
+title: "Electronic phenotyping as coarsening at random: identifiability of clinical states from diagnosis codes"
+authors:
+  - family-names: Towell
+    given-names: Alexander
+    email: lex@metafunctor.com
+    orcid: "https://orcid.org/0000-0001-6443-9897"
+    affiliation: "Southern Illinois University Edwardsville"
+abstract: >-
+  We formalize identifiability conditions for electronic phenotyping when
+  diagnosis codes are informative of latent clinical severity. We embed
+  code-based phenotyping in the coarsening-at-random framework: the true
+  clinical state is the latent cause, the observed diagnosis code set is the
+  candidate set, and a chart-reviewed patient is a singleton candidate set
+  that restores identifiability. A glass-ceiling theorem shows that
+  prevalence, code sensitivity, and code specificity are jointly non-
+  identifiable from code data alone. An identifiability theorem shows that a
+  chart-reviewed subsample covering both classes identifies the coding model
+  and yields the Rogan-Gladen plug-in estimator. The framework unifies
+  Hui-Walter latent class models, Rogan-Gladen correction, and verification-
+  bias correction in one vocabulary.
+keywords:
+  - masked data
+  - coarsening at random
+  - electronic phenotyping
+  - EHR
+  - ICD codes
+  - latent-class model
+  - Rogan-Gladen
+  - identifiability
+license: CC-BY-4.0

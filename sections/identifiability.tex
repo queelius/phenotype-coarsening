@@ -1,0 +1,206 @@
+\section{Identifiability and code-frequency consistency}
+\label{sec:identifiability}
+
+We port \cref{thm:bg-id} to electronic phenotyping. Three results
+follow: a glass-ceiling theorem (\cref{thm:glass-ceiling}), an
+identifiability theorem with chart review
+(\cref{thm:identifiability-chart}), and a code-frequency consistency
+corollary (\cref{thm:code-total}).
+
+\subsection{The phenotyping glass ceiling}
+
+A patient with no diagnosis code for condition $Z$ has candidate set
+$\{0,1\}$: the codes do not resolve the true state. From code data
+alone, the only observable quantity for a single binary code is the
+code frequency
+\begin{equation}
+  q := \Prob(C = 1)
+     = \pi \cdot \mathrm{sens} + (1 - \pi) \cdot (1 - \mathrm{spec}),
+  \label{eq:code-freq}
+\end{equation}
+a single scalar constraint on the three unknowns $(\pi, \mathrm{sens},
+\mathrm{spec})$.
+
+\begin{theorem}[Glass ceiling for phenotyping]
+\label{thm:glass-ceiling}
+Let $C$ be a single binary diagnosis code generated under the DGP of
+\cref{sec:translation} with unknown prevalence $\pi$, code sensitivity
+$\mathrm{sens}$, and code specificity $\mathrm{spec}$. If the coding
+mechanism is left unrestricted, then $(\pi, \mathrm{sens},
+\mathrm{spec})$ is non-identifiable from code data alone: for any
+observed code frequency $q \in (0,1)$ there exists a continuum of
+triples $(\pi, \mathrm{sens}, \mathrm{spec})$ producing the same $q$.
+\end{theorem}
+
+\begin{proof}
+Equation \eqref{eq:code-freq} is one scalar equation in three unknowns
+$(\pi, \mathrm{sens}, \mathrm{spec}) \in (0,1)^3$. Fix any target $q
+\in (0,1)$. We exhibit a two-dimensional surface of admissible triples
+producing the same $q$. Choose $(\pi, \mathrm{spec})$ with $\pi \in
+(0,1)$ and $\mathrm{spec}$ in the admissibility region
+\begin{equation}
+  \max\!\Bigl(0,\ 1 - \tfrac{q}{1-\pi}\Bigr)
+  \;\le\; \mathrm{spec} \;\le\;
+  \min\!\Bigl(1,\ \tfrac{1-q}{1-\pi}\Bigr),
+  \label{eq:admissible}
+\end{equation}
+and solve \eqref{eq:code-freq} for
+\begin{equation}
+  \mathrm{sens}(\pi, \mathrm{spec})
+    = \frac{q - (1-\pi)(1-\mathrm{spec})}{\pi}.
+  \label{eq:glass-sens}
+\end{equation}
+The two bounds in \eqref{eq:admissible} are exactly the constraints
+$\mathrm{sens} \le 1$ (upper bound on $\mathrm{spec}$) and
+$\mathrm{sens} \ge 0$ (lower bound): from $\mathrm{sens} \le 1$,
+$(1-\pi)(1-\mathrm{spec}) \ge q - \pi$, i.e.
+$\mathrm{spec} \le (1-q)/(1-\pi)$. (The earlier statement omitted the
+upper bound; without it a triple such as $q=0.5, \pi=0.1,
+\mathrm{spec}=0.99$ would give the inadmissible $\mathrm{sens}=4.91$.)
+By construction the triple
+$(\pi, \mathrm{sens}(\pi, \mathrm{spec}), \mathrm{spec})$
+reproduces $q$ exactly. The admissibility region is a two-dimensional
+open subset of the unit square whenever it is nonempty (which holds
+for every $q \in (0,1)$, e.g. around $\mathrm{spec} = 1-q$ at small
+$\pi$), so the solution set is a two-dimensional surface in the unit
+cube. Every point of this
+surface produces the identical observed code frequency $q$; distinct
+parameter triples are therefore observationally indistinguishable from
+the code data alone.
+\end{proof}
+
+\Cref{thm:glass-ceiling} formalizes a fact that EHR researchers know
+informally: the fraction of patients carrying a code is not the
+prevalence. Setting $\hat\pi_{\text{code}} = q$ implicitly assumes
+$\mathrm{sens} = \mathrm{spec} = 1$, the one corner of the solution
+surface where the code is a perfect proxy. Every other admissible
+coding model gives a different prevalence consistent with the same
+data. Code-only prevalence is biased not because the estimator is
+crude but because the parameter is non-identifiable.
+
+\subsection{Identifiability with chart review}
+
+The role of chart review is to add singleton-candidate-set rows to
+$\tilde{C}$, restoring rank. A chart-reviewed patient has an
+adjudicated true state $\Y_i$; the pair $(\Y_i, C_i)$ is a fully
+observed draw from the coding mechanism.
+
+\begin{theorem}[Identifiability with chart review]
+\label{thm:identifiability-chart}
+Suppose a chart-reviewed subsample of $m$ patients is adjudicated, and
+the subsample contains at least one patient with $\Y = 1$ and at least
+one with $\Y = 0$. If
+\begin{enumerate}[(i)]
+\item the coding mechanism belongs to a parametric family identifiable
+  from the joint distribution of $(\Y, S, C)$ on the subsample, and
+\item the conditional severity distribution $\Prob(S \mid \Y)$ on the
+  subsample equals $\Prob(S \mid \Y)$ on the cohort
+  (\emph{case-mix representativeness}: this holds trivially when the
+  subsample is drawn iid from the cohort, and violations are
+  quantified in \cref{cor:casemix}),
+\end{enumerate}
+then the coding-model parameters are identified from the subsample, and
+the cohort prevalence $\pi$ is identified from the full-cohort code
+frequency $q$ via \eqref{eq:code-freq}.
+\end{theorem}
+
+\begin{proof}[Sketch]
+The argument is two-stage, paralleling the spike-in identifiability
+theorem of \citet{towell2026scrnacoarsening}. Stage one: on the
+chart-reviewed subsample both $\Y_i$ and $C_i$ are observed, so the
+conditional code probabilities $\Prob(C = 1 \mid \Y = 1, S)$ and
+$\Prob(C = 1 \mid \Y = 0)$ are estimated by a standard regression of
+$C$ on $\Y$ and $S$; condition (i) supplies enough distinct design
+points to identify the coding parameters, and hence $\mathrm{sens}$ and
+$\mathrm{spec}$. Stage two: with $\mathrm{sens}$ and $\mathrm{spec}$
+identified, \eqref{eq:code-freq} becomes one equation in the single
+unknown $\pi$, solved as
+\begin{equation}
+  \hat\pi
+    = \frac{q - (1 - \widehat{\mathrm{spec}})}
+            {\widehat{\mathrm{sens}} - (1 - \widehat{\mathrm{spec}})},
+  \label{eq:deconvolve}
+\end{equation}
+which is well-defined whenever $\widehat{\mathrm{sens}} + \widehat{\mathrm{spec}}
+> 1$, the condition that the code is informative about $\Y$. Equation
+\eqref{eq:deconvolve} is the \citet{rogan1978estimating} prevalence
+correction estimator with $\mathrm{sens}$ and $\mathrm{spec}$ supplied
+by the chart-reviewed subsample instead of being assumed known. The
+contribution of this paper at this step is structural (placing the
+estimator inside the masked-cause framework and exhibiting the
+chart-reviewed singleton as the identifying mechanism), not a new
+estimator. Identifiability follows by standard regularity. Condition (ii) is the
+representativeness requirement: if it fails, stage two uses subsample
+sensitivity where cohort sensitivity is needed, and $\hat\pi$ inherits
+that error. This residual bias is bounded in \cref{sec:methodology}.
+\end{proof}
+
+\Cref{thm:identifiability-chart} is the phenotyping analog of the
+spike-in theorem of \citet{towell2026scrnacoarsening}. A chart-reviewed
+patient plays exactly the role that an ERCC spike-in transcript plays
+there: a singleton candidate set whose truth is known by construction,
+supplying the identifying rows that code data alone cannot. The two
+qualifiers deserve emphasis. Condition (i) requires the chart-reviewed
+subsample to cover both $\Y = 0$ and $\Y = 1$ patients; reviewing only
+code-positive patients identifies sensitivity but not specificity.
+Condition (ii) is the case-mix representativeness assumption, the
+direct analog of the ERCC-endogenous capture-efficiency match; it is
+the principal practical limit and is examined in \cref{sec:methodology}.
+
+\subsection{Code-frequency consistency}
+
+A fitted phenotype model has a structural property: it reproduces the
+marginal observed code frequency exactly, regardless of the prevalence
+it reports.
+
+\begin{theorem}[Code-frequency consistency]
+\label{thm:code-total}
+Let $(\hat\pi, \widehat{\mathrm{sens}}, \widehat{\mathrm{spec}})$ be any
+interior maximum-likelihood estimate of the phenotype model for a
+single binary code $C$. Then the fitted code frequency matches the
+empirical code frequency exactly,
+\begin{equation}
+  \hat\pi \cdot \widehat{\mathrm{sens}}
+    + (1 - \hat\pi)\cdot(1 - \widehat{\mathrm{spec}})
+    = \bar{C},
+  \label{eq:code-total}
+\end{equation}
+where $\bar{C}$ is the empirical fraction of code-positive patients.
+\end{theorem}
+
+\begin{proof}
+The marginal log-likelihood of a single binary code depends on the
+parameters only through the implied code frequency $q(\pi,
+\mathrm{sens}, \mathrm{spec})$ of \eqref{eq:code-freq}. The data
+contribute a Bernoulli log-likelihood proportional to $\bar{C}\log q +
+(1 - \bar{C})\log(1 - q)$, whose unique stationary point in $q \in
+(0,1)$ is $q = \bar{C}$. Any interior MLE in the regime $\mathrm{sens} + \mathrm{spec} > 1$,
+i.e.\ where the code is informative about $\Y$ (so the gradient of $q$
+with respect to $(\pi, \mathrm{sens}, \mathrm{spec})$ is nonzero on the
+parameter interior), therefore satisfies $q(\hat\pi,
+\widehat{\mathrm{sens}}, \widehat{\mathrm{spec}}) = \bar{C}$, which is
+\eqref{eq:code-total}. This is the binary, code-frequency form of the
+cell-total consistency identity of \citet[\S 3]{towell2026scrnacoarsening}:
+at an interior MLE the fitted marginal matches the empirical marginal
+exactly. The multi-code extension follows by the same argument applied
+to the joint code-frequency vector; we omit the algebra here.
+\end{proof}
+
+\Cref{thm:code-total} has a sharp practical consequence. Every point on
+the glass-ceiling solution surface of \cref{thm:glass-ceiling}
+satisfies \eqref{eq:code-total}: a model reporting $\hat\pi = 0.05$ and
+a model reporting $\hat\pi = 0.20$ can both reproduce the observed code
+frequency perfectly. A marginal-fit check, comparing predicted to
+observed code frequency, therefore cannot detect prevalence bias. The
+diagnostic that practitioners reach for, ``does the model recover the
+observed coding rate,'' is uninformative about the quantity of
+interest. Diagnosing prevalence bias requires the singleton candidate
+sets of \cref{thm:identifiability-chart}: chart review, anchor
+observations, or an external gold-standard registry. The same limit was
+identified for scRNA-seq in \citet{towell2026scrnacoarsening} and for
+spatial deconvolution in \citet{towell2026spatialcoarsening}.
+Code-frequency consistency (\cref{thm:code-total}) is a special case of
+the general coarsened-data consistency theorem of
+\citet{towell2026synthesis}, in which the singleton-candidate-set
+device used here, chart review, appears as one instance of a
+domain-independent rank condition and singleton-restoration mechanism.

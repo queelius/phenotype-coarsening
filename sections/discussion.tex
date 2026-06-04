@@ -1,0 +1,154 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Relation to prior work}
+
+The estimation problem this paper addresses, recovering disease
+prevalence and code error rates without a perfect reference, has a
+substantial prior literature, and we want to be precise about what is
+and is not new.
+
+\paragraph{Prevalence correction and latent-class diagnostic-test
+models.} The deconvolution \eqref{eq:deconvolve} that supplies the
+chart-review-calibrated prevalence estimator is the
+\citet{rogan1978estimating} formula, a textbook screening-test
+correction: given known sensitivity and specificity, apparent
+prevalence is inverted to true prevalence. Rogan and Gladen presume
+the two error rates known precisely because, as \cref{thm:glass-ceiling}
+makes explicit, the triple $(\pi, \mathrm{sens}, \mathrm{spec})$ is
+non-identifiable from code data alone. \citet{hui1980estimating} is
+the foundational latent-class work: it estimates the sensitivity and
+specificity of diagnostic tests, and the prevalence of disease, by
+treating the true disease status as a latent class and fitting
+multiple imperfect tests jointly. The estimator of
+\cref{thm:identifiability-chart} is, in the case of two coarse features
+and no chart review, a Hui-Walter latent-class model. We do not claim
+to originate latent-class estimation of disease status, nor the
+estimation of sensitivity and specificity without a gold standard, nor
+the Rogan-Gladen plug-in. \citet{dawid1979maximum} is the
+methodological ancestor one step further back: the EM algorithm for
+observer (rater) error rates, which is the same latent-variable
+maximum-likelihood computation applied to disagreeing raters rather
+than disagreeing tests. The coding mechanism of \cref{sec:translation}
+is a rater-error model in which the rater is the EHR coding process.
+
+\paragraph{Verification bias.} The case-mix-gap residual bound
+(\cref{cor:casemix}) belongs substantively to the verification-bias
+literature in diagnostic-test evaluation. \citet{begg1983assessment}
+showed that when verification of disease status is selective (so the
+chart-reviewed or biopsy-confirmed subsample is not a random sample of
+those screened), apparent sensitivity and specificity are biased, and
+the bias propagates into prevalence and predictive-value estimates;
+this is the now-standard verification-bias correction
+\citep{hubbard2020outcome}. The substantive content of
+\cref{cor:casemix} is a verification-bias statement: the subsample
+sensitivity is not transportable to the cohort when chart review is
+selective. What the coarsening framing contributes is positioning:
+verification bias becomes a C2 failure on the chart-reviewed subsample
+(non-informative coding fails within the reviewed group as it does
+within the cohort), and the singleton candidate sets supplied by chart
+review identify the cohort coding model only insofar as the reviewed
+case mix matches. The contribution of this paper is the recasting and
+the unification, not the verification-bias result itself.
+
+\paragraph{Electronic phenotyping efforts.} eMERGE
+\citep{gottesman2013emerge,newton2013validation} and the PheKB catalog
+\citep{kirby2016phekb} are large phenotyping programs that build and
+share code-based phenotype algorithms. PheWAS \citep{denny2010phewas}
+treats code groupings as phenotypes directly.
+\citet{banda2018phenotyping} surveys the methodological landscape from
+rule-based to machine-learning phenotyping; \citet{liao2015highthroughput}
+develop high-throughput algorithms with NLP; PheNorm
+\citep{yu2018phenorm} and PheCAP \citep{zhang2019phecap} are
+semi-supervised methods that reduce the labeling burden;
+\citet{pivovarov2015learning} fits probabilistic phenotypes
+end-to-end. The anchor-and-learn framework \citep{halpern2016anchor}
+learns phenotype classifiers using high-precision ``anchor''
+observations whose presence almost certainly implies the true state;
+an anchor is structurally a near-singleton candidate set, and
+\citet{halpern2016anchor} is the closest prior work in spirit to the
+singleton-restores-identifiability mechanism of this paper.
+Surveillance bias, the phenomenon that more intense looking finds more
+disease, is named by \citet{haut2011surveillance} and quantified as a
+phenotyping artifact by \citet{carrell2014surveillance}. The
+EHR-as-data perspective of \citet{hripcsak2013correlating} and the
+OHDSI treatment-pathway work of \citet{hripcsak2016characterizing}
+frame the data-quality and process-dependence issues that the
+coarsening lens makes precise.
+
+\paragraph{What is new here.} The contribution is not latent-class
+phenotyping. It is the masked-cause unification: (i) the explicit
+candidate-set translation that places code-based phenotyping inside the
+coarsening-at-random framework of \citet{towell2026masked}; (ii) the
+C1-C2-C3 classification that identifies informative coding as
+specifically a C2 violation, distinguishing it from miscoding (C1) and
+from confounding between coding parameters and prevalence (C3); (iii)
+the explicit glass-ceiling construction (\cref{thm:glass-ceiling}),
+which exhibits the non-identifiable solution surface rather than
+asserting non-identifiability; and (iv) the informative-coding bias
+bound (\cref{thm:bias-informative}) and the case-mix-gap residual bound
+(\cref{cor:casemix}), which quantify the bias of the code-only and
+calibrated estimators in terms of interpretable quantities, the
+severity-coding correlation and the case-mix gap. The Hui-Walter model
+tells a practitioner \emph{that} prevalence can be estimated from
+imperfect tests; the coarsening framework tells the practitioner
+\emph{which assumption} (C2) the EHR violates, \emph{why} (informative
+coding), and \emph{how large} the resulting bias is.
+
+\subsection{What the framework does not address}
+
+\begin{itemize}
+\item \textbf{Multi-code phenotypes and temporal structure.} We treat
+  the candidate set as generated by a small set of binary codes
+  observed cross-sectionally. Real phenotype algorithms use code counts,
+  code timing, medication sequences, and laboratory trajectories. The
+  framework extends to richer candidate sets, but the present analysis
+  does not.
+
+\item \textbf{Chart review error.} We treat the chart-reviewed state as
+  a true singleton. Adjudication itself is imperfect, and inter-rater
+  disagreement is exactly the setting of \citet{dawid1979maximum}. The
+  framework would benefit from incorporating chart-review error via the
+  C2-relaxation results of \citet{towell2026mdrelax}.
+
+\item \textbf{The form of the coding mechanism.} The bias bound
+  \eqref{eq:meth-bound} assumes a logistic coding mechanism with a
+  scalar severity. Real coding depends on insurance, site, clinician,
+  and calendar time. A more flexible misspecification model is needed.
+
+\item \textbf{Causal estimands.} We target descriptive cohort
+  prevalence. Phenotyping feeds downstream association and
+  causal-inference analyses, where informative coding induces further
+  bias (differential misclassification of the exposure or outcome). The
+  propagation of the coarsening bias into those estimands is left open.
+
+\item \textbf{Identifiability from codes alone via parametric
+  restriction.} \Cref{thm:glass-ceiling} concerns an unrestricted
+  coding mechanism. With a sufficiently restricted parametric family,
+  or multiple conditionally independent codes as in
+  \citet{hui1980estimating}, prevalence can be identified without chart
+  review. Characterizing exactly which restrictions suffice, and how
+  fragile the resulting estimates are, is a natural follow-up.
+\end{itemize}
+
+\subsection{Sibling applications of the framework}
+
+The masked-data lens has now been applied across a small set of
+measurement domains.
+In single-cell RNA sequencing, \citet{towell2026scrnacoarsening} treats
+dropout zeros as candidate-set ambiguity and identifies ERCC
+spike-ins as the singleton mechanism. In spatial transcriptomics,
+\citet{towell2026spatialcoarsening} ports the rank condition to
+cell-type deconvolution within spots. In differential privacy,
+\citet{towell2026dpcoarsening} treats noisy release as the masking
+mechanism and characterizes identifiability of population parameters
+under privacy budgets. In programmatic weak supervision,
+\citet{towell2026weaksupcoarsening} treats labeling functions as
+candidate sets and develops identifiability conditions in the absence
+of a gold standard. Electronic phenotyping joins this family as the
+healthcare-data instance: the same masked-cause structure with the
+same singleton-restores-identifiability mechanism, distinguished by
+informative coding as the dominant C2 violation rather than (as in
+the transcriptomics applications) a comparatively mild deviation from
+non-informative observation. Recognition of this common structure may
+streamline methodology across these subfields.

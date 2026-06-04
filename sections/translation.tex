@@ -1,0 +1,131 @@
+\section{Translation: electronic phenotyping as a coarsening problem}
+\label{sec:translation}
+
+\subsection{The data-generating process}
+
+Consider a cohort of $n$ patients. Patient $i$ has a true clinical
+state $\Y_i \in \{0,1\}$, where $\Y_i = 1$ indicates that the patient
+has condition $Z$. The cohort prevalence is $\pi = \Prob(\Y_i = 1)$.
+
+Each patient also has a latent severity $S_i$, a scalar summarizing how
+advanced or symptomatic the condition is (for $\Y_i = 0$ patients, $S_i$
+summarizes competing-condition burden or encounter intensity). Severity
+is stochastically larger among true cases: $\E[S_i \mid \Y_i = 1] >
+\E[S_i \mid \Y_i = 0]$.
+
+The EHR records a diagnosis code for condition $Z$ through a coding
+mechanism. Write $C_i \in \{0,1\}$ for the indicator that the code is
+present. The coding mechanism is
+\begin{equation}
+  \Prob(C_i = 1 \mid \Y_i = 1, S_i)
+    = \mathrm{logit}^{-1}(b_0 + b_1 S_i),
+  \qquad
+  \Prob(C_i = 1 \mid \Y_i = 0)
+    = \mathrm{fpr},
+  \label{eq:trans-coding}
+\end{equation}
+so that the code sensitivity for a true case rises with severity when
+$b_1 > 0$, and code specificity is $1 - \mathrm{fpr}$. The marginal
+code sensitivity is $\mathrm{sens} = \E[\,\mathrm{logit}^{-1}(b_0 + b_1
+S) \mid \Y = 1\,]$. Additional coarse features, a procedure code or a
+medication order, each carry their own sensitivity and specificity and
+enter the same way.
+
+The slope $b_1$ is the crux. When $b_1 = 0$, coding depends on $\Y$
+only, not on severity, and the coarsening is non-informative: C2 holds.
+When $b_1 > 0$, sicker true cases are preferentially coded; the
+candidate set (the codes) carries information about the latent severity
+beyond the latent state, and C2 fails. This is the
+\emph{informative-coding} regime, and it is the realistic one: a true
+case who is asymptomatic and never presents for care is rarely coded,
+while a true case who is hospitalized is coded repeatedly.
+
+The phenotyping problem is: given the observed codes $\{C_i\}$ for the
+full cohort, and for a chart-reviewed subsample the adjudicated true
+states $\{\Y_i\}$, recover the cohort prevalence $\pi$ and the coding
+model.
+
+\subsection{The translation}
+
+\Cref{tab:translation} states the explicit correspondence to
+masked-data inference.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.40\linewidth} p{0.56\linewidth}@{}}
+\toprule
+\textbf{Masked-data framework} & \textbf{Electronic phenotyping} \\
+\midrule
+Component / latent cause
+  & True clinical state / phenotype $\Y$ \\
+Candidate set $c_i$
+  & States consistent with the observed diagnosis codes \\
+Masking probability
+  & Coding mechanism $\Prob(\text{code} \mid \text{true state})$,
+    shaped by clinician behavior and billing \\
+Singleton candidate set $|c_i| = 1$
+  & A chart-reviewed / clinician-adjudicated patient \\
+C1 (truth in candidate set)
+  & The true state is consistent with the codes;
+    violated by gross miscoding \\
+\textbf{C2} (coarsening at random): conditional on the candidate set, the masking distribution does not depend on which element is the true cause
+  & Concretely: coding depends on $\Y$ only through modeled structure,
+    not on prevalence or severity; \emph{violated} when coding
+    intensity tracks severity (surveillance / detection bias) \\
+C3 (parameter independence)
+  & Coding-mechanism parameters distinct from prevalence;
+    \emph{violated} when billing intensity tracks prevalence (a clinic
+    facing a documented outbreak codes more aggressively, coupling
+    sensitivity to the prevalence it is meant to estimate) \\
+\bottomrule
+\end{tabular}
+\caption{Translation between the masked-data framework
+\citep{towell2026masked} and electronic phenotyping. The C2 row is
+load-bearing: informative coding is precisely the C2 violation.}
+\label{tab:translation}
+\end{table}
+
+The phenotyping case is the binary specialization of the masked-cause
+problem: the latent cause $\Y$ takes two values, and a patient with no
+code at all has candidate set $\{0,1\}$ (the truth is unresolved),
+while a chart-reviewed patient has a singleton candidate set
+($\{0\}$ or $\{1\}$). The conceptual content is in the masking
+mechanism. In the transcriptomics applications
+\citep{towell2026scrnacoarsening,towell2026spatialcoarsening} the
+coarsening mechanism is approximately non-informative once technical
+covariates are modeled, so C2 holds and the difficulty is a rank
+condition. In phenotyping, C2 fails by construction whenever $b_1 \neq
+0$, and the difficulty is the bias that informative coding induces.
+
+\subsection{Existing phenotyping methods in this language}
+
+\paragraph{Rule-based phenotype algorithms} (the PheKB catalog,
+\citealp{kirby2016phekb}) define a phenotype as a deterministic
+function of codes, medications, and labs. In our language, a rule
+declares a candidate set to be a singleton whenever the rule fires.
+The rule's positive predictive value is exactly the probability that
+this declared singleton contains the truth, a C1 statement.
+
+\paragraph{PheWAS} \citep{denny2010phewas} treats the presence of a
+code grouping as the phenotype directly. This is the code-only
+estimator: it equates the candidate set with the truth and inherits
+the full informative-coding bias.
+
+\paragraph{Anchor-and-learn} \citep{halpern2016anchor} identifies
+high-precision ``anchor'' observations whose presence almost certainly
+implies the true state. An anchor is a near-singleton candidate set;
+the framework predicts that anchors restore identifiability for the
+same reason chart review does, with residual bias controlled by how
+anchor-positive patients differ from the cohort.
+
+\paragraph{Latent-class phenotyping} in the tradition of
+\citet{hui1980estimating} and \citet{dawid1979maximum} fits
+sensitivity and specificity jointly with prevalence, treating $\Y$ as a
+latent class. This is the framework's natural estimator when no
+singletons are available; \cref{thm:glass-ceiling} states the
+conditions under which it is identifiable.
+
+These methods are not in conflict. They are different ways of
+supplying, or failing to supply, the identifying information that the
+coarsening framework shows is required.

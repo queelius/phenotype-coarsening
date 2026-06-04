@@ -1,0 +1,29 @@
+{
+  "title": "Electronic phenotyping as coarsening at random: identifiability of clinical states from diagnosis codes",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "<p><strong>Objective:</strong> To formalize identifiability conditions for electronic phenotyping when diagnosis codes are informative of latent clinical severity, and to characterize the bias of code-only and chart-review-calibrated prevalence estimators.</p><p><strong>Materials and Methods:</strong> We embed code-based phenotyping in the coarsening-at-random framework: the true clinical state is the latent cause, the observed diagnosis code set is the candidate set, the coding process is the masking mechanism, and a chart-reviewed patient is a singleton candidate set. We identify informative coding (sicker patients are coded more) as the failure of the non-informative-masking condition C2, and we analyze identifiability and bias under this failure.</p><p><strong>Results:</strong> A glass-ceiling theorem shows that (prevalence, code sensitivity, code specificity) is jointly non-identifiable from code data alone. An identifiability theorem shows that a chart-reviewed subsample covering both classes identifies the coding model and yields the Rogan-Gladen plug-in estimator. A code-frequency consistency theorem shows the fitted model reproduces the empirical code frequency exactly at any interior MLE, so marginal-fit diagnostics are blind to prevalence bias. A bias bound shows the code-only bias is controlled by the severity-coding correlation and the calibrated estimator's residual bias by the case-mix gap. Simulation confirms all four results; the bias sign can flip from negative to positive depending on whether sensitivity deficit or false-positive inflation dominates.</p><p><strong>Discussion:</strong> The framework names the failing assumption (C2) and quantifies the bias, unifying Hui-Walter latent class models, Rogan-Gladen correction, and verification-bias correction in one vocabulary.</p><p><strong>Conclusion:</strong> Chart review is a necessity, not a luxury; its identifying value is bounded by case-mix representativeness.</p>",
+  "version": "0.1.0",
+  "license": {
+    "id": "CC-BY-4.0"
+  },
+  "keywords": [
+    "masked-data inference",
+    "coarsening at random",
+    "identifiability",
+    "electronic phenotyping",
+    "EHR",
+    "ICD codes",
+    "latent-class model",
+    "Rogan-Gladen",
+    "chart review",
+    "verification bias"
+  ],
+  "creators": [
+    {
+      "name": "Towell, Alexander",
+      "orcid": "0000-0001-6443-9897",
+      "affiliation": "Southern Illinois University Edwardsville"
+    }
+  ]
+}

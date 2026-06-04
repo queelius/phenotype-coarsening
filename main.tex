@@ -1,0 +1,117 @@
+%% Electronic phenotyping as coarsening at random:
+%% identifiability of clinical states from diagnosis codes.
+%% Conference-format draft (target: 12 pages incl. references).
+
+\documentclass[11pt,letterpaper]{article}
+
+%% ============================================================================
+%% Packages
+%% ============================================================================
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage[shortlabels]{enumitem}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{natbib}
+\usepackage{cleveref}
+
+%% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{condition}{Condition}
+\crefname{condition}{Condition}{Conditions}
+\Crefname{condition}{Condition}{Conditions}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%% Macros
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\X}{X}
+\newcommand{\Y}{Y}
+
+%% Title
+\title{Electronic phenotyping as coarsening at random:\\
+       identifiability of clinical states from diagnosis codes}
+
+\author{
+  Alexander Towell \\
+  Department of Computer Science \\
+  Southern Illinois University Edwardsville \\
+  \texttt{lex@metafunctor.com} \\
+  ORCID: \href{https://orcid.org/0000-0001-6443-9897}{0000-0001-6443-9897}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent\textbf{Objective:} To formalize identifiability conditions
+for electronic phenotyping when diagnosis codes are informative of
+latent clinical severity, and to characterize the bias of code-only
+and chart-review-calibrated prevalence estimators.
+
+\noindent\textbf{Materials and Methods:} We embed code-based
+phenotyping in the coarsening-at-random framework: the true clinical
+state is the latent cause, the observed diagnosis code set is the
+candidate set, the coding process is the masking mechanism, and a
+chart-reviewed patient is a singleton candidate set. We identify
+informative coding (sicker patients are coded more) as the failure of
+the non-informative-masking condition C2, and we analyze identifiability
+and bias under this failure.
+
+\noindent\textbf{Results:} A glass-ceiling theorem shows that
+(prevalence, code sensitivity, code specificity) is jointly
+non-identifiable from code data alone. An identifiability theorem
+shows that a chart-reviewed subsample covering both classes identifies
+the coding model and yields the Rogan-Gladen plug-in estimator. A
+code-frequency consistency theorem shows the fitted model reproduces
+the empirical code frequency exactly at any interior MLE, so
+marginal-fit diagnostics are blind to prevalence bias. A bias bound
+shows the code-only bias is controlled by the severity-coding
+correlation and the calibrated estimator's residual bias by the
+case-mix gap. Simulation confirms all four results; the bias sign can
+flip from negative to positive depending on whether sensitivity
+deficit or false-positive inflation dominates.
+
+\noindent\textbf{Discussion:} The framework names the failing
+assumption (C2) and quantifies the bias, unifying Hui-Walter latent
+class models, Rogan-Gladen correction, and verification-bias
+correction in one vocabulary.
+
+\noindent\textbf{Conclusion:} Chart review is a necessity, not a
+luxury; its identifying value is bounded by case-mix representativeness.
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/translation}
+\input{sections/identifiability}
+\input{sections/methodology}
+\input{sections/validation}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

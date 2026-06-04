@@ -1,0 +1,153 @@
+\section{Introduction}
+\label{sec:intro}
+
+Electronic health records (EHRs) generate administrative data on every
+patient encounter: International Classification of Diseases (ICD)
+diagnosis codes, procedure codes, and medication orders. A large
+secondary-use literature reuses this data to answer the question
+\emph{does a patient have clinical condition $Z$?} This task is
+\emph{electronic phenotyping}: inferring a latent clinical state from
+coarse administrative signals \citep{banda2018phenotyping,
+hripcsak2013correlating}. Phenome-wide association studies
+\citep{denny2010phewas}, the Electronic Medical Records and Genomics
+network \citep{gottesman2013emerge,newton2013validation}, the PheKB
+algorithm catalog \citep{kirby2016phekb}, anchor-and-learn classifiers
+\citep{halpern2016anchor}, high-throughput phenotyping
+\citep{liao2015highthroughput}, semi-supervised methods such as
+PheNorm \citep{yu2018phenorm} and PheCAP \citep{zhang2019phecap}, and
+probabilistic phenotypes \citep{pivovarov2015learning} all build
+phenotype definitions on top of diagnosis codes and related EHR
+features.
+
+The difficulty is that the diagnosis code is a noisy and
+\emph{systematically biased} proxy for the true clinical state. A code
+is generated only when a clinician records an encounter, when a billing
+process attaches a code to that encounter, and when coverage and
+reimbursement incentives make that code worth recording. The fraction
+of patients carrying a code for condition $Z$ is therefore not the
+prevalence of $Z$. Code sensitivity (the probability that a true case
+is coded) and code specificity (the probability that a non-case is not
+coded) are both unknown, and both depend on factors, encounter
+frequency, disease severity, and local coding practice, that have
+nothing to do with the underlying epidemiology
+\citep{hripcsak2013correlating,carrell2014surveillance}.
+
+\subsection{The bridge to masked-data inference}
+
+The central observation of this paper is that electronic phenotyping
+is mathematically isomorphic to the masked-data series-system
+identifiability problem of \citet{towell2026masked}. In that
+framework, a latent cause is masked, but a \emph{candidate set}
+containing it is observed; coarsening-at-random conditions
+\citep{heitjan1991ignorability,gill1997coarsening} on the masking
+mechanism determine whether the cause-level parameters can be
+recovered.
+
+The translation to phenotyping is direct. The true clinical state
+$\Y \in \{0,1\}$ is the latent cause. The set of clinical states
+consistent with a patient's observed diagnosis codes is the candidate
+set. The coding process, $\Prob(\text{code} \mid \Y)$, shaped by
+clinician behavior and billing, is the masking mechanism. A
+chart-reviewed (clinician-adjudicated) patient, for whom the true
+state is established by manual record review, is a singleton candidate
+set: the truth is known exactly. The C1-C2-C3 conditions for ignorable
+coarsening port directly. This framework has been applied to scRNA-seq
+zero inflation \citep{towell2026scrnacoarsening} and to spatial
+transcriptomics deconvolution \citep{towell2026spatialcoarsening};
+electronic phenotyping is the present application.
+
+The phenotyping case has a distinctive feature. In the transcriptomics
+applications the coarsening mechanism is approximately non-informative
+once technical covariates are modeled. In phenotyping it is
+\emph{structurally} informative. Sicker patients have more encounters
+and are coded more; billing incentives change which codes are recorded;
+surveillance and detection intensity track disease severity
+\citep{haut2011surveillance}. The coarsening-at-random condition that
+fails is C2, non-informative coding. This single observation explains
+why code-only prevalence estimates are biased and why chart review is
+a necessity rather than a luxury.
+
+\subsection{Prior work on latent-class phenotyping}
+
+Estimating disease status without a gold standard has a deep prior
+literature that we do not claim to originate.
+\citet{rogan1978estimating} gave the canonical
+sensitivity-and-specificity correction for apparent prevalence, the
+plug-in estimator that recovers $\pi$ from the observed code
+frequency once $\mathrm{sens}$ and $\mathrm{spec}$ are known; this
+paper's chart-review estimator is that estimator with the two error
+rates supplied by the adjudicated subsample. \citet{hui1980estimating}
+introduced the latent-class model for estimating diagnostic-test error
+rates when no perfect reference test exists, and
+\citet{dawid1979maximum} gave the EM algorithm for rater-error rates
+that is the methodological ancestor of all such work. The
+verification-bias literature (\citealp{begg1983assessment}; see
+\citealp{hubbard2020outcome} for a recent phenotyping-specific
+treatment) recognized that when verification of disease status is
+selective, naive estimates of test accuracy and prevalence are biased;
+the case-mix gap of \cref{cor:casemix} is the coarsening recasting of
+this phenomenon. eMERGE
+\citep{gottesman2013emerge} and PheKB \citep{kirby2016phekb} are
+large-scale phenotyping efforts, and the anchor-and-learn framework
+\citep{halpern2016anchor} uses high-precision signals in a way
+structurally analogous to singleton candidate sets. Our contribution
+is not latent-class phenotyping itself. It is the masked-cause
+unification: a single coarsening vocabulary that classifies the
+failure modes of code-based phenotyping through the C1-C2-C3
+conditions, pinpoints informative coding as the C2 violation, and
+quantifies the resulting bias.
+
+\subsection{Contributions}
+
+We contribute:
+
+\begin{itemize}
+\item \textbf{A bridge from electronic phenotyping to masked-data
+  inference} (\cref{sec:translation}), with an explicit translation
+  table mapping the coding mechanism to the masking mechanism and a
+  chart-reviewed patient to a singleton candidate set.
+
+\item \textbf{A glass-ceiling theorem} (\cref{thm:glass-ceiling},
+  \cref{sec:identifiability}): with an unrestricted coding mechanism,
+  prevalence, code sensitivity, and code specificity are jointly
+  non-identifiable from code data alone. This formalizes why the
+  fraction of patients carrying a code is a biased prevalence
+  estimate.
+
+\item \textbf{An identifiability theorem with chart review}
+  (\cref{thm:identifiability-chart}, \cref{sec:identifiability}): a
+  chart-reviewed subsample covering both diseased and non-diseased
+  patients identifies the coding model, and cohort prevalence then
+  becomes identifiable. This is the direct analog of the spike-in
+  identifiability theorem of \citet{towell2026scrnacoarsening}.
+
+\item \textbf{A code-frequency consistency theorem}
+  (\cref{thm:code-total}, \cref{sec:identifiability}): a fitted
+  phenotype model reproduces the marginal observed code frequencies
+  exactly at an interior MLE. Marginal-fit checks therefore cannot
+  detect prevalence bias.
+
+\item \textbf{A bias bound under informative coding}
+  (\cref{thm:bias-informative}, \cref{sec:methodology}): when code
+  sensitivity correlates with latent disease severity, a C2 violation,
+  the code-only prevalence estimator has bias bounded by a function of
+  the severity-coding correlation. The chart-review-calibrated
+  estimator's residual bias is bounded by the case-mix gap between the
+  chart-reviewed subsample and the cohort, the analog of the
+  ERCC-versus-endogenous capture-efficiency gap in
+  \citet{towell2026scrnacoarsening}.
+
+\item \textbf{Simulation validation} (\cref{sec:validation}), with a
+  MIMIC-IV \citep{johnson2023mimiciv} real-data application described.
+\end{itemize}
+
+The paper's central message: code-based prevalence estimation is
+biased by structure, not by accident, because coding is informative
+and C2 fails. The bias is not directional in a simple way: depending
+on the balance between code sensitivity and false-positive inflation,
+code-only prevalence can understate the truth, overstate it, or pass
+through zero as the severity-coding correlation varies (see
+\cref{sec:validation}, \cref{tab:informative}). Chart review supplies
+the singleton candidate sets that restore identifiability, and its
+value is quantified by how well the reviewed subsample represents the
+cohort.

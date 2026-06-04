@@ -1,0 +1,236 @@
+\section{Bias bound under informative coding}
+\label{sec:methodology}
+
+The glass ceiling (\cref{thm:glass-ceiling}) shows code data alone
+cannot identify prevalence, and chart review
+(\cref{thm:identifiability-chart}) restores identifiability under two
+conditions. This section quantifies what happens when those conditions
+fail. The C2 violation, informative coding, drives the code-only
+estimator's bias; the case-mix gap drives the calibrated estimator's
+residual bias. We bound each.
+
+\subsection{Setup}
+
+Recall the coding mechanism \eqref{eq:trans-coding}: code sensitivity
+for a true case is $\mathrm{logit}^{-1}(b_0 + b_1 S)$, increasing in
+latent severity $S$ when $b_1 > 0$. The marginal code sensitivity over
+the cohort's diseased patients is
+\begin{equation}
+  \mathrm{sens}_{\text{coh}}
+    = \E[\,\mathrm{logit}^{-1}(b_0 + b_1 S) \mid \Y = 1,\ \text{cohort}\,].
+  \label{eq:meth-sens}
+\end{equation}
+When $b_1 = 0$, coding does not depend on severity and C2 holds. When
+$b_1 \neq 0$, C2 fails: the code carries information about $S$ beyond
+$\Y$. The natural scalar severity of the violation is the
+coding-slope magnitude $|b_1|$ itself, and the bias of the code-only
+estimator (below) is driven by $|b_1|$. A descriptive correlation
+\begin{equation}
+  \rho := \mathrm{Corr}\big(S,\ \mathrm{logit}^{-1}(b_0 + b_1 S)
+                              \,\big|\, \Y = 1\big)
+  \label{eq:meth-rho}
+\end{equation}
+is sometimes reported, but $\rho$ is \emph{not} monotone in $|b_1|$
+and should not be read as the violation strength: at $b_1 = 0$ the
+coding probability is constant and $\rho = 0$ degenerately, whereas
+as $b_1 \to 0^{+}$ the logistic is near-linear in $S$ and
+$\rho \to 1$; as $|b_1|$ grows the logistic saturates toward a step
+function, which \emph{reduces} the linear correlation with $S$.
+\Cref{tab:informative} shows $\rho$ rising to $0.994$ at $b_1 = 0.5$
+and then falling monotonically to $0.743$ at $b_1 = 3.0$ even as the
+code-only bias grows, confirming the non-monotonicity. We therefore
+index violation severity by $|b_1|$ throughout.
+
+\subsection{Bias of the code-only estimator}
+
+The code-only estimator $\hat\pi_{\text{code}} = \bar{C}$ targets the
+code frequency \eqref{eq:code-freq} rather than the prevalence.
+
+\begin{theorem}[Bias bound under informative coding]
+\label{thm:bias-informative}
+Under the DGP of \cref{sec:translation}, the code-only prevalence
+estimator has expectation
+\begin{equation}
+  \E[\hat\pi_{\text{code}}]
+    = \pi\,\mathrm{sens}_{\text{coh}}
+      + (1 - \pi)(1 - \mathrm{spec}),
+  \label{eq:meth-codebias}
+\end{equation}
+so its bias is
+\begin{equation}
+  \mathrm{Bias}(\hat\pi_{\text{code}})
+    = -\pi\big(1 - \mathrm{sens}_{\text{coh}}\big)
+      + (1 - \pi)(1 - \mathrm{spec}).
+  \label{eq:meth-codebias2}
+\end{equation}
+Let $\mu_{S,1} := \E[S \mid \Y = 1]$ and $\sigma_{S,1} := \mathrm{sd}(S
+\mid \Y = 1)$ be the conditional mean and standard deviation of
+severity among diseased patients. The cohort sensitivity admits the
+bound
+\begin{equation}
+  \big|\,\mathrm{sens}_{\text{coh}} \,-\, \mathrm{logit}^{-1}(b_0 + b_1\,\mu_{S,1})\,\big|
+    \;\le\; \frac{|b_1|\,\sigma_{S,1}}{4},
+  \label{eq:meth-bound}
+\end{equation}
+so the gap between the average-severity coding probability
+$\mathrm{logit}^{-1}(b_0 + b_1\,\mu_{S,1})$ and the marginal cohort
+sensitivity is controlled by the severity spread $\sigma_{S,1}$ scaled
+by the strength of informative coding $|b_1|$. The sensitivity deficit
+$1 - \mathrm{sens}_{\text{coh}}$ is bounded by $1 -
+\mathrm{logit}^{-1}(b_0 + b_1\,\mu_{S,1}) + |b_1|\,\sigma_{S,1}/4$.
+\end{theorem}
+
+\begin{proof}
+Equation \eqref{eq:meth-codebias} is the expectation of a Bernoulli
+mixture: a code is positive either because the patient is a true case
+who is coded (probability $\pi\,\mathrm{sens}_{\text{coh}}$) or a
+non-case who is miscoded (probability $(1-\pi)(1-\mathrm{spec})$).
+Subtracting $\pi$ from this expectation gives
+\eqref{eq:meth-codebias2}. For \eqref{eq:meth-bound}, write the
+per-case code probability as $g(s) := \mathrm{logit}^{-1}(b_0 + b_1
+s)$. The logistic derivative $g'(s) = b_1\,g(s)(1-g(s))$ satisfies
+$|g'(s)| \le |b_1|/4$ for all $s$, since $x(1-x) \le 1/4$ on $[0,1]$.
+Re-anchor at the conditional mean $\mu_{S,1}$ (a population quantity
+of the cohort DGP, estimable from the chart-reviewed subsample under
+the case-mix representativeness of \cref{thm:identifiability-chart}(ii)):
+by the mean value theorem, for every $s$ there exists $\xi$ between
+$s$ and $\mu_{S,1}$ with
+$g(s) - g(\mu_{S,1}) = g'(\xi)\,(s - \mu_{S,1})$, so
+\begin{equation*}
+  |g(s) - g(\mu_{S,1})|
+    \;\le\;
+    \frac{|b_1|}{4}\,|s - \mu_{S,1}|
+\end{equation*}
+holds pointwise. Taking expectations conditional on $\Y = 1$ and
+applying Jensen's inequality to the convex function $|\cdot|$ (so
+$|\E[X]| \le \E[|X|]$) gives
+\begin{equation*}
+  |\,\mathrm{sens}_{\text{coh}} - g(\mu_{S,1})\,|
+    \;=\; |\E[g(S) \mid \Y = 1] - g(\mu_{S,1})|
+    \;\le\; \frac{|b_1|}{4}\,\E[\,|S - \mu_{S,1}| \,\mid \Y = 1\,].
+\end{equation*}
+By Jensen's inequality applied to the (concave) square root, $\E[|S -
+\mu_{S,1}| \mid \Y = 1] \le \sqrt{\E[(S - \mu_{S,1})^2 \mid \Y = 1]} =
+\sigma_{S,1}$. Combining gives \eqref{eq:meth-bound}. The anchor
+$g(\mu_{S,1}) = \mathrm{logit}^{-1}(b_0 + b_1\,\mu_{S,1})$ is the
+coding probability of a patient at average severity, and the bound
+states that the marginal sensitivity over diseased patients departs
+from this anchor by at most $|b_1|\sigma_{S,1}/4$. The bound is tight
+in the C2-holds direction: when $b_1 = 0$, both sides vanish and
+$\mathrm{sens}_{\text{coh}} = \mathrm{logit}^{-1}(b_0)$ exactly.
+\end{proof}
+
+Two features of \cref{thm:bias-informative} are worth stating
+plainly. First, the code-only bias does not vanish as the cohort grows:
+it is a bias in the estimand, not sampling error, exactly the situation
+\cref{thm:glass-ceiling} predicts. Second, the \emph{sign} of the bias
+is not predetermined. \Cref{eq:meth-codebias2} is a contest between
+the sensitivity deficit $\pi(1 - \mathrm{sens}_{\text{coh}})$ and the
+false-positive inflation $(1-\pi)(1-\mathrm{spec})$. When coding
+sensitivity is low, the deficit dominates and code-only prevalence
+\emph{understates} the truth: mild and asymptomatic true cases are
+systematically uncoded. When informative coding raises the marginal
+sensitivity of the true cases that do present, the deficit shrinks
+faster than the false-positive inflation, and for a sufficiently
+severity-coded condition the bias turns positive, so code-only
+prevalence \emph{overstates} the truth. The bias passes through zero
+at the level set $\mathrm{sens}_{\text{coh}} = 1 -
+(1-\pi)(1-\mathrm{spec})/\pi$, a coincidence rather than a regular
+feature. The simulation of \cref{sec:validation} (\cref{tab:informative})
+exhibits this sign change directly: at non-informative coding ($b_1 =
+0$) the code-only bias is $-0.016$, and it crosses zero and rises to
+$+0.032$ as the severity-coding correlation grows. The unifying
+statement is that the bias is structural, governed by the coding
+mechanism, and is not a sampling artifact; the direction of the bias
+is set by the specific coding-mechanism parameters and is not a useful
+heuristic on its own. This is the surveillance-bias mechanism of
+\citet{haut2011surveillance,carrell2014surveillance} expressed as a
+coarsening statement: more intense detection of severe cases makes the
+coded population unrepresentative of the true case population, and
+the resulting prevalence error can move in either direction.
+
+\subsection{Residual bias of the chart-review-calibrated estimator}
+
+The calibrated estimator of \cref{thm:identifiability-chart} fits the
+coding model, including the severity dependence, on the chart-reviewed
+subsample and then deconvolves cohort prevalence via
+\eqref{eq:deconvolve}. If the subsample case mix matches the cohort,
+condition (ii) of \cref{thm:identifiability-chart}, the calibrated
+estimator is consistent. In practice chart-reviewed patients are not a
+random sample of the cohort: review is often triggered by an encounter,
+a code, or a referral, so the reviewed subsample is enriched for
+severe, well-documented patients.
+
+\begin{corollary}[Residual bias from case-mix gap]
+\label{cor:casemix}
+Let $\mathrm{sens}_{\text{rev}}$ be the marginal code sensitivity in
+the chart-reviewed subsample and $\mathrm{sens}_{\text{coh}}$ that in
+the cohort, and define the case-mix gap $\delta := \mathrm{sens}_{\text{rev}}
+- \mathrm{sens}_{\text{coh}}$. To first order in $\delta$, the
+chart-review-calibrated prevalence estimator has bias
+\begin{equation}
+  \mathrm{Bias}(\hat\pi_{\text{cal}})
+    \;\approx\;
+    \frac{-\,\pi\,\delta}
+         {\,\mathrm{sens}_{\text{coh}} + \mathrm{spec} - 1\,}
+    \,+\, O(\delta^2),
+  \label{eq:meth-residual}
+\end{equation}
+so the residual bias vanishes when the reviewed subsample is
+representative ($\delta = 0$) and grows linearly in the case-mix gap.
+\end{corollary}
+
+\begin{proof}[Sketch]
+The calibrated estimator substitutes $\mathrm{sens}_{\text{rev}}$ for
+the cohort sensitivity in the deconvolution formula
+\eqref{eq:deconvolve}. Differentiating \eqref{eq:deconvolve} with
+respect to the plugged-in sensitivity at the true parameters gives the
+sensitivity coefficient $-\pi/(\mathrm{sens}_{\text{coh}} +
+\mathrm{spec} - 1)$; multiplying by the perturbation $\delta$ yields
+\eqref{eq:meth-residual}. The argument is a first-order Taylor
+expansion of the deconvolution map, the same perturbation calculation
+used for the ERCC-endogenous bias bound in
+\citet[\S 7]{towell2026scrnacoarsening}.
+\end{proof}
+
+\Cref{cor:casemix} is the phenotyping analog of the ERCC-endogenous
+gap. In scRNA-seq, spike-in transcripts have a different capture
+efficiency from endogenous transcripts, so the spike-in-calibrated
+correction inherits a bias proportional to the capture gap
+\citep{towell2026scrnacoarsening}. In phenotyping, chart-reviewed
+patients have a different coding sensitivity from the cohort, because
+review is triggered by documentation-rich encounters, so the
+chart-review-calibrated estimator inherits a bias proportional to the
+case-mix gap $\delta$. The structural parallel is exact: a singleton
+candidate set restores identifiability only to the extent that the
+singletons are drawn from the same population as the units being
+corrected.
+
+The practical recommendation that follows mirrors the one in
+\citet{towell2026scrnacoarsening}. Chart review is a
+\emph{principled but bounded} tool. It is principled because
+\cref{thm:identifiability-chart} gives a clean recovery procedure;
+bounded because the case-mix gap limits what review can recover.
+Practitioners should sample chart review to match the cohort case mix
+(for example, stratified review across encounter intensity and code
+status) rather than reviewing whoever is most convenient, and should
+report the case-mix gap $\delta$ as a sensitivity quantity alongside
+the prevalence estimate.
+
+\paragraph{A deployable reference, not an oracle.} When the fitted
+code-sensitivity $\mathrm{logit}^{-1}(\hat b_0 + \hat b_1 S)$ is
+marginalized to a scalar $\widehat{\mathrm{sens}}$, the reference
+distribution of $S$ over true cases must not use the latent label
+$\Y$ for the full cohort, which is unavailable at deployment.
+Averaging over $\{S_i : \Y_i = 1\}$ in the whole cohort is an oracle.
+The deployable replacement marginalizes over \emph{all} observed
+cohort severities weighted by an estimated membership probability
+$\widehat\Prob(\Y = 1 \mid S)$, itself fit on the adjudicated
+subsample (where $\Y$ is observed). In simulation with $\pi = 0.1$,
+$b_1 = 1.5$, and severity-biased review, the oracle reference and the
+weighted deployable reference give essentially identical prevalence
+estimates (bias $+0.0002$ vs $+0.0004$ over $400$ replicates), while
+the convenience subsample reference is biased ($-0.0043$); see
+\texttt{scripts/oracle\_check.R}. The chart-review remedy therefore
+survives in a form that uses only observed severities and the review
+labels.

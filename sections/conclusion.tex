@@ -1,0 +1,52 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Code-based phenotyping has been refined methodologically through
+latent-class fits, anchor learning, semi-supervised algorithms, and
+high-throughput pipelines, yet the structural reason its prevalence
+estimates are biased has stayed informal. The masked-data framing
+gives the structure a name. Informative coding is a C2 violation;
+chart review is a singleton candidate set; the Rogan-Gladen plug-in is
+the deconvolution it enables; marginal-fit blindness is the
+identifiability cost of working with only the cohort code frequency;
+the case-mix gap is the limit on what review can recover.
+
+This recasting moves the practitioner's question from method-specific
+(``should I use PheCAP or PheNorm?'') to assumption-specific (``does
+my coding mechanism violate C2, and is my chart-reviewed subsample
+representative of the cohort?''). The diagnosis is almost always that
+C2 fails. The framework then says precisely what is required: singleton
+candidate sets, supplied by chart review, anchor observations, or a
+gold-standard registry, sampled to match the cohort case mix; a
+reported case-mix gap as a sensitivity quantity; and recognition that
+the marginal-fit check is silent on prevalence error.
+
+The same coarsening structure appears across health-data measurement
+problems with the same informative-observation issue: claims-based
+comorbidity indices, registry case-finding, cause-of-death coding, and
+adverse-event surveillance. In each case a latent clinical truth is
+observed only through an administrative process whose intensity depends
+on the truth, and the C1-C2-C3 conditions and the identifiability
+machinery transfer directly.
+
+Three extensions sit naturally next. First, multi-code and temporal
+candidate sets: real phenotype algorithms aggregate code counts, code
+timing, medication sequences, and lab trajectories, and the
+identifiability rank conditions extend but have not been worked out.
+Second, chart-review error: adjudication is itself imperfect, and the
+C2-relaxation results of \citet{towell2026mdrelax} would let the
+singleton assumption itself be relaxed. Third, propagation: code-based
+phenotypes feed downstream association and causal-inference analyses,
+where informative coding induces differential misclassification of the
+exposure or outcome, and the propagation of the coarsening bias into
+those estimands is open.
+
+The contribution this paper makes is positioning. It places electronic
+phenotyping inside a unified vocabulary that names the failing
+assumption (C2), supplies the remedy (singleton candidate sets), and
+quantifies the residual (the case-mix gap). The technical results are
+not breakthroughs in isolation, they are corollaries of the
+masked-data framework applied to the specific structure of EHR coding,
+but the unification is what lets a clinician or methodologist read off,
+from the coding mechanism and the chart-review sampling, the direction
+and bounded magnitude of the prevalence error they will incur.
