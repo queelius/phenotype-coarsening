@@ -57,7 +57,9 @@ external packages).
 
 ## Status
 
-**Reviewed 2026-06-08 (papermill multi-agent): minor-revision.** No critical issues; the Beesley-Mukherjee positioning is now resolved. Top remaining item: run the MIMIC-IV real-data application (blocked on PhysioNet credentialing), or add an interim semi-synthetic or public-dataset demonstration.
+**Reviewed 2026-06-08 (papermill multi-agent): minor-revision.** No critical issues; the Beesley-Mukherjee positioning is now resolved. Top remaining item: run the MIMIC-IV real-data application, which is blocked on PhysioNet credentialing (credentialed access not yet held). An interim fully-synthetic-only demonstration was assessed and declined: the existing validation is already a controlled synthetic study sweeping the relevant regimes, and the only non-synthetic value comes from real coding behavior on real patients (MIMIC-IV codes plus the KDIGO lab chart-proxy), which is exactly what the credentialing blocks; a Synthea or literature-pinned semi-synthetic run would not be a real-data point and is not added.
+
+Post-review manuscript fixes applied (2026-06-08): T1 glass-ceiling theorem statement now states the interior / full-support regularity condition its proof uses; T3 multi-code code-frequency consistency is now proved (joint code-pattern multinomial argument) rather than asserted; a forward pointer from the chart-review theorem to the oracle-free reference paragraph was added.
 
 **Initial scaffold (May 2026).** All sections have substantive content.
 The simulation runs and the four theorems are validated numerically;

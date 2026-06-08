@@ -25,19 +25,26 @@ a single scalar constraint on the three unknowns $(\pi, \mathrm{sens},
 \label{thm:glass-ceiling}
 Let $C$ be a single binary diagnosis code generated under the DGP of
 \cref{sec:translation} with unknown prevalence $\pi$, code sensitivity
-$\mathrm{sens}$, and code specificity $\mathrm{spec}$. If the coding
-mechanism is left unrestricted, then $(\pi, \mathrm{sens},
+$\mathrm{sens}$, and code specificity $\mathrm{spec}$, and suppose the
+parameter triple lies in the open unit cube, $(\pi, \mathrm{sens},
+\mathrm{spec}) \in (0,1)^3$ (the interior / full-support regularity
+condition: prevalence is strictly between $0$ and $1$, and the code is
+neither never nor always present in either class). If the coding
+mechanism is otherwise left unrestricted, then $(\pi, \mathrm{sens},
 \mathrm{spec})$ is non-identifiable from code data alone: for any
 observed code frequency $q \in (0,1)$ there exists a continuum of
-triples $(\pi, \mathrm{sens}, \mathrm{spec})$ producing the same $q$.
+interior triples $(\pi, \mathrm{sens}, \mathrm{spec})$ producing the
+same $q$.
 \end{theorem}
 
 \begin{proof}
-Equation \eqref{eq:code-freq} is one scalar equation in three unknowns
-$(\pi, \mathrm{sens}, \mathrm{spec}) \in (0,1)^3$. Fix any target $q
-\in (0,1)$. We exhibit a two-dimensional surface of admissible triples
-producing the same $q$. Choose $(\pi, \mathrm{spec})$ with $\pi \in
-(0,1)$ and $\mathrm{spec}$ in the admissibility region
+By the interior regularity condition the parameters range over the open
+cube $(0,1)^3$, and equation \eqref{eq:code-freq} is one scalar equation
+in these three unknowns; in particular $\pi > 0$, so the division by
+$\pi$ below is well-defined. Fix any target $q \in (0,1)$. We exhibit a
+two-dimensional surface of admissible triples producing the same $q$.
+Choose $(\pi, \mathrm{spec})$ with $\pi \in (0,1)$ and $\mathrm{spec}$
+in the admissibility region
 \begin{equation}
   \max\!\Bigl(0,\ 1 - \tfrac{q}{1-\pi}\Bigr)
   \;\le\; \mathrm{spec} \;\le\;
@@ -162,6 +169,11 @@ code-positive patients identifies sensitivity but not specificity.
 Condition (ii) is the case-mix representativeness assumption, the
 direct analog of the ERCC-endogenous capture-efficiency match; it is
 the principal practical limit and is examined in \cref{sec:methodology}.
+A reader may also worry that calibrating the coding model against the
+cohort severity distribution smuggles in the latent labels it is meant
+to recover; it does not, and a deployable form of the estimator that
+uses only observed severities and the review labels is given in
+\cref{par:oracle-free}.
 
 \subsection{Code-frequency consistency}
 
@@ -198,8 +210,27 @@ parameter interior), therefore satisfies $q(\hat\pi,
 \eqref{eq:code-total}. This is the binary, code-frequency form of the
 cell-total consistency identity of \citet[\S 3]{towell2026scrnacoarsening}:
 at an interior MLE the fitted marginal matches the empirical marginal
-exactly. The multi-code extension follows by the same argument applied
-to the joint code-frequency vector; we omit the algebra here.
+exactly.
+
+The multi-code extension follows by the same argument applied to the
+joint code-pattern distribution. With $K$ binary codes there are $2^K$
+possible code patterns $c \in \{0,1\}^K$; write $q_c(\theta)$ for the
+probability the model assigns to pattern $c$ under parameters $\theta =
+(\pi, \mathrm{sens}_1, \mathrm{spec}_1, \dots)$, and $\bar{C}_c$ for the
+empirical fraction of patients with pattern $c$. The likelihood depends
+on $\theta$ only through the pattern-probability vector $q(\theta) =
+(q_c(\theta))_{c}$, which lies in the simplex $\Delta_{2^K - 1}$, and the
+data contribute the multinomial log-likelihood $\sum_c \bar{C}_c \log
+q_c$. On the open simplex this objective is strictly concave in $q$ with
+unique stationary point $q = \bar{C}$, the empirical pattern frequencies.
+Hence at any interior MLE for which the parametrization $\theta \mapsto
+q(\theta)$ is locally submersive (its Jacobian has full row rank, the
+multi-code analog of the single-code informativeness condition
+$\mathrm{sens} + \mathrm{spec} > 1$), the stationarity conditions force
+$q_c(\hat\theta) = \bar{C}_c$ for every pattern $c$. Marginalizing over
+the other codes recovers \eqref{eq:code-total} for each single code as a
+margin of this joint identity, and shows the joint code-pattern
+frequencies are reproduced exactly, not merely the single-code margins.
 \end{proof}
 
 \Cref{thm:code-total} has a sharp practical consequence. Every point on

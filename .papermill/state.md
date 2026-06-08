@@ -3,7 +3,7 @@ schema_version: 1
 paper_type: theory-with-simulation
 stage: scaffold-v0.2-post-review
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-06-08
 authors:
   - name: Alexander Towell
     email: lex@metafunctor.com
@@ -166,7 +166,19 @@ review_history:
       numerics: T1 admissibility + sens=4.91 counterexample, T2 Rogan-Gladen recovery (pi=0.12 exact), T3 consistency incl wrong-prevalence check, T4 Jensen bound across b1 grid, and all four sim tables reproduced against results.rds / results_table4a_deployable.rds / results_oracle_check.rds
     review_dir: .papermill/reviews/2026-06-08/
 next_action: |
-  Tier 1 remaining: MIMIC-IV real-data application (requires PhysioNet credentialed access).
+  Tier 1 remaining: MIMIC-IV real-data application (BLOCKED: requires PhysioNet
+  credentialed access, not yet held). Interim fully-synthetic-only demo assessed
+  and declined 2026-06-08 (would not be a real-data point; existing simulation
+  already sweeps the relevant regimes; see README Status). The KDIGO/AKI
+  chart-proxy plan in validation.tex is ready to run once credentialing lands.
+  Addressed 2026-06-08 (no new review round): M2 (multi-code T3 now proved via the
+  joint code-pattern multinomial argument, no longer asserted); T1 glass-ceiling
+  theorem statement now carries the interior / full-support regularity condition
+  its proof uses; S3 forward pointer from thm:identifiability-chart to the
+  oracle-free reference (par:oracle-free) added. Remaining minor items: M1 abstract
+  trim (~278 -> ~250 words) and length compression for JAMIA; M3 q/Cbar and
+  sens/sens_coh notation unification; M4 optional extra replicates at the m=50
+  chart-review cell; S2 optional Spencer 2011 / conditional-dependence cite.
   Tier 3 polish: abstract trim, conclusion synthesis, conference compression.
   Once MIMIC-IV pass lands, submit to JAMIA (rank 1).
 notes: |
