@@ -78,6 +78,22 @@ coding model gives a different prevalence consistent with the same
 data. Code-only prevalence is biased not because the estimator is
 crude but because the parameter is non-identifiable.
 
+This non-identifiability is the EHR-coding instance of a general
+phenomenon in partial identification: when a binary outcome is
+measured with unknown error, its marginal distribution is only
+set-identified. \citet{horowitz1995identification} bound population
+parameters under contaminated and corrupted sampling, and
+\citet{molinari2008partial} gives sharp identification regions for the
+distribution of a misclassified variable. \Cref{thm:glass-ceiling}
+specializes that picture to a single diagnosis code with unknown
+sensitivity and specificity: rather than bound a functional, we exhibit
+the full two-dimensional solution surface in
+$(\pi,\mathrm{sens},\mathrm{spec})$ space and show every point on it is
+observationally equivalent, which is what makes the chart-review
+singletons of \cref{thm:identifiability-chart} the identifying device
+that the partial-identification literature would call an external
+restriction.
+
 \subsection{Identifiability with chart review}
 
 The role of chart review is to add singleton-candidate-set rows to

@@ -70,13 +70,24 @@ a necessity rather than a luxury.
 \subsection{Prior work on latent-class phenotyping}
 
 Estimating disease status without a gold standard has a deep prior
-literature that we do not claim to originate.
+literature that we do not claim to originate. In econometrics, the
+non-identifiability of a distribution measured with unknown error is
+the subject of partial identification: \citet{horowitz1995identification}
+bound population parameters under corrupted sampling and
+\citet{molinari2008partial} gives sharp regions for misclassified
+distributions, of which our glass ceiling
+(\cref{thm:glass-ceiling}) is the single-code instance.
 \citet{rogan1978estimating} gave the canonical
 sensitivity-and-specificity correction for apparent prevalence, the
 plug-in estimator that recovers $\pi$ from the observed code
 frequency once $\mathrm{sens}$ and $\mathrm{spec}$ are known; this
 paper's chart-review estimator is that estimator with the two error
-rates supplied by the adjudicated subsample. \citet{hui1980estimating}
+rates supplied by the adjudicated subsample. Calibrated EHR estimators
+that supply those error rates from a chart-reviewed sample already
+exist (\citealp{tong2020augmented}; the SAMBA framework of
+\citealp{beesley2022samba}; PhIAP, \citealp{zhang2019phiap}); our
+deconvolution is their prevalence-only special case, derived as the
+singleton-restoration step of the coarsening framework. \citet{hui1980estimating}
 introduced the latent-class model for estimating diagnostic-test error
 rates when no perfect reference test exists, and
 \citet{dawid1979maximum} gave the EM algorithm for rater-error rates

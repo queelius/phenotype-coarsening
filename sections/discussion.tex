@@ -4,9 +4,28 @@
 \subsection{Relation to prior work}
 
 The estimation problem this paper addresses, recovering disease
-prevalence and code error rates without a perfect reference, has a
-substantial prior literature, and we want to be precise about what is
-and is not new.
+prevalence and code error rates without a perfect reference, sits at
+the intersection of three mature literatures, and we want to be
+precise about what is and is not new. The first is partial
+identification of mismeasured data in econometrics; the second is
+calibrated prevalence and association estimation for EHR phenotypes;
+the third is positive-unlabeled (PU) learning, which studies exactly
+the asymmetric-label structure that informative coding produces. We
+take each in turn alongside the latent-class and verification-bias
+roots.
+
+\paragraph{Partial identification with misclassification.} The
+glass-ceiling theorem (\cref{thm:glass-ceiling}) is the EHR-coding
+instance of a result long known in the partial-identification
+literature. \citet{horowitz1995identification} derive sharp bounds on
+population parameters when a fraction of the data is contaminated or
+corrupted, and \citet{molinari2008partial} characterizes the
+identification region of a misclassified discrete distribution. Our
+contribution at this step is not the non-identifiability fact but its
+coarsening reading: we exhibit the solution surface explicitly, tie
+its boundary to the C1-C2-C3 conditions, and show chart-review
+singletons are the external restriction that collapses the region to a
+point.
 
 \paragraph{Prevalence correction and latent-class diagnostic-test
 models.} The deconvolution \eqref{eq:deconvolve} that supplies the
@@ -50,6 +69,41 @@ within the cohort), and the singleton candidate sets supplied by chart
 review identify the cohort coding model only insofar as the reviewed
 case mix matches. The contribution of this paper is the recasting and
 the unification, not the verification-bias result itself.
+
+\paragraph{Calibrated EHR prevalence and association estimators.} A
+recent biostatistics literature already supplies calibrated estimators
+for EHR phenotypes that combine an error-prone code with a small
+chart-reviewed sample, and we do not claim to introduce calibrated
+estimation. \citet{tong2020augmented} give an augmented estimator that
+corrects EHR association estimates for differential phenotype
+misclassification using a chart-reviewed subsample;
+\citet{beesley2022samba} (the SAMBA framework) jointly handle
+selection bias and outcome misclassification, estimating
+misclassification rates that may vary with patient factors; and
+\citet{zhang2019phiap} (PhIAP) estimate phenotype-model performance
+internally from anchor-positive and unlabeled patients without a
+validation set. The deconvolution estimator of
+\cref{thm:identifiability-chart} is the prevalence-only special case of
+this family, recovered here as the singleton-restoration mechanism of
+the coarsening framework rather than as a new estimator; what the
+framework adds is the explicit C2 diagnosis of \emph{why} the
+uncorrected code is biased and the case-mix bound of \cref{cor:casemix}
+on what the chart-review correction can and cannot recover.
+
+\paragraph{Positive-unlabeled learning.} Code-only phenotyping is
+structurally a positive-unlabeled (PU) problem: a code-positive patient
+is a (noisy) positive label, while a code-negative patient is
+unlabeled, not a confirmed non-case. \citet{bekker2020pulearning}
+survey PU learning and isolate the selected-completely-at-random (SCAR)
+assumption, under which label selection is independent of features;
+informative coding is exactly a SCAR violation, the case
+\citet{kumar2024pulsnar} (PULSNAR) target when they estimate class
+proportions under selected-not-at-random labeling driven by, for
+example, severe cases being diagnosed more often. The coarsening view
+identifies their selected-not-at-random regime with our C2 violation
+and supplies the matching identification statement: severity-dependent
+labeling is non-identifiable from the labels alone and is repaired by
+representative singletons.
 
 \paragraph{Electronic phenotyping efforts.} eMERGE
 \citep{gottesman2013emerge,newton2013validation} and the PheKB catalog

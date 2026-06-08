@@ -4,8 +4,8 @@
 Conference-format draft, builds clean, em-dash free, simulation run.
 
 This is the fourth paper in the masked-data framework series, after
-`~/github/papers/scrna-coarsening/` (scRNA-seq) and
-`~/github/papers/spatial-coarsening/` (spatial transcriptomics, the
+`~/github/coarsening/papers/scrna-coarsening/` (scRNA-seq) and
+`~/github/coarsening/papers/spatial-coarsening/` (spatial transcriptomics, the
 structural template for this repo).
 
 ---
@@ -157,13 +157,13 @@ apparatus, the same pattern spatial-coarsening uses.
 
 ## 4. Companion repos and the citation pattern
 
-- `~/github/papers/spatial-coarsening/` is the structural template:
+- `~/github/coarsening/papers/spatial-coarsening/` is the structural template:
   same preamble, same 8-section breakdown, same Makefile targets.
-- `~/github/papers/scrna-coarsening/` is the closest precedent for the
+- `~/github/coarsening/papers/scrna-coarsening/` is the closest precedent for the
   theorem structure. T2 mirrors its spike-in identifiability theorem,
   T3 mirrors its cell-total consistency theorem, and T4's case-mix
   corollary mirrors its ERCC-endogenous gap result.
-- `~/github/papers/masked-causes-in-series-systems/` is the foundational
+- `~/github/coarsening/papers/masked-causes-in-series-systems/` is the foundational
   theory, cited as `towell2026masked`.
 
 Proofs cite the framework series for shared apparatus rather than
@@ -200,7 +200,7 @@ in any expansion.
 ## 7. Quick-start commands
 
 ```bash
-cd ~/github/papers/phenotype-coarsening
+cd ~/github/coarsening/papers/phenotype-coarsening
 make paper      # build main.pdf
 make sim        # run the simulation, write results.rds
 make figures    # regenerate figures from results.rds

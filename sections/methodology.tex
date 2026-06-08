@@ -217,7 +217,12 @@ status) rather than reviewing whoever is most convenient, and should
 report the case-mix gap $\delta$ as a sensitivity quantity alongside
 the prevalence estimate.
 
-\paragraph{A deployable reference, not an oracle.} When the fitted
+\paragraph{An oracle-free reference.} Calibrated EHR prevalence
+estimators that fit code error rates on a chart-reviewed sample are
+already available \citep{tong2020augmented,beesley2022samba,zhang2019phiap};
+the point of this subsection is narrower, namely that the coarsening
+deconvolution can be evaluated without the latent cohort labels, so the
+remedy survives outside the simulation oracle. When the fitted
 code-sensitivity $\mathrm{logit}^{-1}(\hat b_0 + \hat b_1 S)$ is
 marginalized to a scalar $\widehat{\mathrm{sens}}$, the reference
 distribution of $S$ over true cases must not use the latent label
