@@ -143,6 +143,28 @@ review_history:
         - P2 conclusion as synthesis rewrite
         - P3 enlarge red marker in glass-ceiling figure
         - P4 12-page conference compression
+  - date: 2026-06-08
+    reviewer: papermill multi-agent (area chair plus seven lenses run directly; Task sub-agent tool unavailable in environment)
+    recommendation: minor-revision
+    findings:
+      critical: []
+      major: []
+      minor:
+        - M1 JAMIA abstract ~278 words over 250-word limit; paper 23 pages long for JAMIA research article
+        - M2 multi-code code-frequency consistency (T3) asserted not shown ("we omit the algebra here")
+        - M3 notation q vs Cbar and sens vs sens_coh
+        - M4 m=50 chart-review cell variance-dominated on 200 replicates
+      suggestions:
+        - S1 interim semi-synthetic or public-data demonstration while MIMIC-IV credentialing pending
+        - S2 optional Spencer 2011 and conditional-dependence-caution cite for identifiability-by-restriction open problem
+        - S3 forward pointer from thm:identifiability-chart to the oracle-free reference paragraph
+      resolved_since_2026-06-04:
+        - prior Major closed: closest recent biostatistics neighbors now cited (beesley2022samba DOI 10.1111/biom.13400 CrossRef-verified; PU-learning pair bekker2020pulearning + kumar2024pulsnar; tong2020augmented; zhang2019phiap)
+    verification:
+      build: make paper clean, 0 undefined (LC_ALL=C grep), 23 pages, em-dash free
+      bibliography: 37 entries, all cited, all in bbl, 0 orphans, 0 undefined, 0 bibtex warnings
+      numerics: T1 admissibility + sens=4.91 counterexample, T2 Rogan-Gladen recovery (pi=0.12 exact), T3 consistency incl wrong-prevalence check, T4 Jensen bound across b1 grid, and all four sim tables reproduced against results.rds / results_table4a_deployable.rds / results_oracle_check.rds
+    review_dir: .papermill/reviews/2026-06-08/
 next_action: |
   Tier 1 remaining: MIMIC-IV real-data application (requires PhysioNet credentialed access).
   Tier 3 polish: abstract trim, conclusion synthesis, conference compression.

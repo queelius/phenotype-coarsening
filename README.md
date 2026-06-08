@@ -57,6 +57,8 @@ external packages).
 
 ## Status
 
+**Reviewed 2026-06-08 (papermill multi-agent): minor-revision.** No critical issues; the Beesley-Mukherjee positioning is now resolved. Top remaining item: run the MIMIC-IV real-data application (blocked on PhysioNet credentialing), or add an interim semi-synthetic or public-dataset demonstration.
+
 **Initial scaffold (May 2026).** All sections have substantive content.
 The simulation runs and the four theorems are validated numerically;
 the numbers in `validation.tex` are the actual simulation output.
